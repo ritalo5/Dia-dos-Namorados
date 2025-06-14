@@ -1,4 +1,3 @@
-noneimgContainer.appendChild(img);
 // Variáveis globais
 let startDate = null;
 let counterInterval = null;
@@ -39,28 +38,20 @@ function addPhoto() {
     
     // Botão de remover
     const removeBtn = document.createElement("button");
-removeBtn.innerHTML = "×";
-removeBtn.title = "Remover foto";
-removeBtn.style.position = "absolute";
-removeBtn.style.top = "10px";
-removeBtn.style.right = "10px";
-removeBtn.style.background = "rgba(255, 0, 0, 0.8)";
-removeBtn.style.color = "white";
-removeBtn.style.border = "none";
-removeBtn.style.borderRadius = "50%";
-removeBtn.style.width = "30px";
-removeBtn.style.height = "30px";
-removeBtn.style.cursor = "pointer";
-removeBtn.style.fontSize = "18px";
-removeBtn.style.zIndex = "10";
-
-removeBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  imgContainer.remove();
-  savePageState(); // atualiza o localStorage
-});
-
-imgContainer.appendChild(removeBtn);
+    removeBtn.innerHTML = "×";
+    removeBtn.style.position = "absolute";
+    removeBtn.style.top = "10px";
+    removeBtn.style.right = "10px";
+    removeBtn.style.background = "rgba(255, 0, 0, 0.8)";
+    removeBtn.style.color = "white";
+    removeBtn.style.border = "none";
+    removeBtn.style.borderRadius = "50%";
+    removeBtn.style.width = "30px";
+    removeBtn.style.height = "30px";
+    removeBtn.style.cursor = "pointer";
+    removeBtn.style.fontSize = "18px";
+    removeBtn.style.display = "none";
+    removeBtn.style.zIndex = "10";
     
     removeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -77,8 +68,6 @@ imgContainer.appendChild(removeBtn);
     });
     
     imgContainer.appendChild(img);
-
-    
     imgContainer.appendChild(removeBtn);
     
     // Inserir antes do primeiro placeholder
@@ -155,17 +144,18 @@ function removeDate(button) {
 function setStartDate() {
   const dateInput = document.getElementById("startDate");
   const selectedDate = dateInput.value;
-
+  
   if (selectedDate) {
     startDate = new Date(selectedDate);
     localStorage.setItem("relationshipStartDate", selectedDate);
     startCounter();
-
+    
     // Feedback visual
     const button = event.target;
     const originalText = button.innerHTML;
     button.innerHTML = '<span class="btn-icon">✓</span>Data Definida!';
     button.style.background = "linear-gradient(135deg, #4CAF50, #45a049)";
+    
     setTimeout(() => {
       button.innerHTML = originalText;
       button.style.background = "linear-gradient(135deg, #ff6b6b, #ff8e8e)";
@@ -390,29 +380,32 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("startDate").value = savedDate;
     startCounter();
   }
-  
+
+  // Carregar fotos e datas salvas
+  loadPageState();
+
   // Iniciar animações
   setInterval(createHeart, 800);
   setInterval(createSparkle, 1500);
   setInterval(createFloatingElement, 2000);
-  
+
   // Adicionar efeitos
   addButtonEffects();
   animateOnScroll();
-  
+
   // Efeito de digitação no título (com delay)
   setTimeout(typewriterEffect, 1000);
-  
+
   // Adicionar efeito de clique em toda a página
   document.addEventListener("click", addClickEffect);
-  
+
   // Adicionar listener para Enter nos inputs
   document.getElementById("newDate").addEventListener("keypress", function(e) {
     if (e.key === "Enter") {
       addDate();
     }
   });
-  
+
   // Efeito de pulsação nos placeholders de foto
   const placeholders = document.querySelectorAll(".photo-placeholder");
   placeholders.forEach((placeholder, index) => {
@@ -420,7 +413,7 @@ document.addEventListener("DOMContentLoaded", function() {
       placeholder.style.animation = "pulse 2s infinite";
     }, index * 200);
   });
-  
+
   // Mensagem de boas-vindas
   setTimeout(() => {
     console.log("💖 Site do Dia dos Namorados carregado com amor! 💖");
@@ -499,6 +492,52 @@ function loadPageState() {
 // Salvar estado antes de sair da página
 window.addEventListener("beforeunload", savePageState);
 
-// Carregar estado quando a página carrega
-document.addEventListener("DOMContentLoaded", loadPageState);
+// Corrija o carregamento inicial unificando tudo em um só DOMContentLoaded
+document.addEventListener("DOMContentLoaded", function() {
+  // Carregar data salva
+  const savedDate = localStorage.getItem("relationshipStartDate");
+  if (savedDate) {
+    startDate = new Date(savedDate);
+    document.getElementById("startDate").value = savedDate;
+    startCounter();
+  }
+
+  // Carregar fotos e datas salvas
+  loadPageState();
+
+  // Iniciar animações
+  setInterval(createHeart, 800);
+  setInterval(createSparkle, 1500);
+  setInterval(createFloatingElement, 2000);
+
+  // Adicionar efeitos
+  addButtonEffects();
+  animateOnScroll();
+
+  // Efeito de digitação no título (com delay)
+  setTimeout(typewriterEffect, 1000);
+
+  // Adicionar efeito de clique em toda a página
+  document.addEventListener("click", addClickEffect);
+
+  // Adicionar listener para Enter nos inputs
+  document.getElementById("newDate").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+      addDate();
+    }
+  });
+
+  // Efeito de pulsação nos placeholders de foto
+  const placeholders = document.querySelectorAll(".photo-placeholder");
+  placeholders.forEach((placeholder, index) => {
+    setTimeout(() => {
+      placeholder.style.animation = "pulse 2s infinite";
+    }, index * 200);
+  });
+
+  // Mensagem de boas-vindas
+  setTimeout(() => {
+    console.log("💖 Site do Dia dos Namorados carregado com amor! 💖");
+  }, 2000);
+});
 
