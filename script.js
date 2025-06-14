@@ -1,6 +1,4 @@
-var cloud_views; //Declare a variable anywhere in global scope
-//if cloud_views has been set by another computer, cloud_views will automatically have that value
-
+noneimgContainer.appendChild(img);
 // Variáveis globais
 let startDate = null;
 let counterInterval = null;
@@ -41,20 +39,28 @@ function addPhoto() {
     
     // Botão de remover
     const removeBtn = document.createElement("button");
-    removeBtn.innerHTML = "×";
-    removeBtn.style.position = "absolute";
-    removeBtn.style.top = "10px";
-    removeBtn.style.right = "10px";
-    removeBtn.style.background = "rgba(255, 0, 0, 0.8)";
-    removeBtn.style.color = "white";
-    removeBtn.style.border = "none";
-    removeBtn.style.borderRadius = "50%";
-    removeBtn.style.width = "30px";
-    removeBtn.style.height = "30px";
-    removeBtn.style.cursor = "pointer";
-    removeBtn.style.fontSize = "18px";
-    removeBtn.style.display = "none";
-    removeBtn.style.zIndex = "10";
+removeBtn.innerHTML = "×";
+removeBtn.title = "Remover foto";
+removeBtn.style.position = "absolute";
+removeBtn.style.top = "10px";
+removeBtn.style.right = "10px";
+removeBtn.style.background = "rgba(255, 0, 0, 0.8)";
+removeBtn.style.color = "white";
+removeBtn.style.border = "none";
+removeBtn.style.borderRadius = "50%";
+removeBtn.style.width = "30px";
+removeBtn.style.height = "30px";
+removeBtn.style.cursor = "pointer";
+removeBtn.style.fontSize = "18px";
+removeBtn.style.zIndex = "10";
+
+removeBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
+  imgContainer.remove();
+  savePageState(); // atualiza o localStorage
+});
+
+imgContainer.appendChild(removeBtn);
     
     removeBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -71,6 +77,8 @@ function addPhoto() {
     });
     
     imgContainer.appendChild(img);
+
+    
     imgContainer.appendChild(removeBtn);
     
     // Inserir antes do primeiro placeholder
@@ -147,18 +155,17 @@ function removeDate(button) {
 function setStartDate() {
   const dateInput = document.getElementById("startDate");
   const selectedDate = dateInput.value;
-  
+
   if (selectedDate) {
     startDate = new Date(selectedDate);
     localStorage.setItem("relationshipStartDate", selectedDate);
     startCounter();
-    
+
     // Feedback visual
     const button = event.target;
     const originalText = button.innerHTML;
     button.innerHTML = '<span class="btn-icon">✓</span>Data Definida!';
     button.style.background = "linear-gradient(135deg, #4CAF50, #45a049)";
-    
     setTimeout(() => {
       button.innerHTML = originalText;
       button.style.background = "linear-gradient(135deg, #ff6b6b, #ff8e8e)";
